@@ -32,17 +32,60 @@ React Frontend → FastAPI Backend ⇄ sqlite-vec + llamacpp LLM
 - **Python 3.10+** : For FastAPI backend.
 - **Node.js 18+** : For React/Vite frontend.
 - **llama.cpp (with embedding support)** : For LLM autoregressive text generation and vector embeddings.
-- **setup.sh** installs the rest.
 
 ---
 ## Installation
 
-```
+## Step 1: Create the main directory and clone the repo, then create directories where the system stores runtime data and uploaded files.
+
+```bash
+mkdir -p VaultLLM
+cd VaultLLM
 git clone https://github.com/prakhar131003/vaultllm.git
-cd vaultllm
-./setup.sh
-./start.sh --dev     # open http://localhost:5173
+mkdir -p data data/uploads models
 ```
+
+## Step 2: Set Up Python Virtual Environment and Install Dependencies
+
+```bash
+python3 -m venv .venv
+./.venv/bin/pip install --upgrade pip
+./.venv/bin/pip install -r backend/requirements.txt
+touch .venv/.deps-installed
+```
+
+## Step 3: Set Up Configuration File (.env)
+
+Copy the template configuration file and from it make a .env file for your environment settings.
+
+## Step 4: Download the LLM using wget
+
+```bash
+wget -O models/Llama-3.2-1B-Instruct-Q4_K_M.gguf \
+ "https://huggingface.co/bartowski/Llama-3.2-1B-Instruct-GGUF/resolve/main/Llama-3.2-1B-Instruct-Q4_K_M.gguf"
+```
+
+## Step 5: Install Frontend Dependencies
+
+```bash
+cd frontend
+npm install
+cd ..
+```
+
+## Step 6: Run the Services
+
+1. **Backend Server (Uvicorn):**
+```bash
+./.venv/bin/uvicorn backend.app.main:app --reload --port 8000
+```
+
+2. **Frontend Development Server (Vite):**
+```bash
+cd frontend
+npm run dev
+```
+Once running, access the web UI at `http://localhost:5173`
 
 ---
 
